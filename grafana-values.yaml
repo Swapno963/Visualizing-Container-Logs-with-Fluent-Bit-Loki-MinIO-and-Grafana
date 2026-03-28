@@ -1,0 +1,42 @@
+# Admin credentials
+adminUser: admin
+adminPassword: admin123
+
+# Service configuration - NodePort for external access
+service:
+  type: NodePort
+  port: 80
+  targetPort: 3000
+  nodePort: 30002
+
+# Persistent storage for dashboards and settings
+persistence:
+  enabled: true
+  size: 5Gi
+
+# Resource limits
+resources:
+  requests:
+    cpu: 100m
+    memory: 128Mi
+  limits:
+    cpu: 500m
+    memory: 256Mi
+
+# Pre-configure Loki as data source
+datasources:
+  datasources.yaml:
+    apiVersion: 1
+    datasources:
+    - name: Loki
+      type: loki
+      access: proxy
+      url: http://loki-gateway.loki.svc.cluster.local
+      isDefault: true
+      editable: true
+
+# Environment variables
+env:
+  GF_SECURITY_ADMIN_PASSWORD: admin123
+  GF_SECURITY_ADMIN_USER: admin
+  GF_SERVER_ROOT_URL: "%(protocol)s://%(domain)s/"
